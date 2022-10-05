@@ -38,36 +38,44 @@ let sectionProductsMen = document.getElementById("sectionProductsMen");
     
 };  */
 
+const catalogoHombres = [];
+
+function botonAgregar(producto) {
+    const boton = document.getElementById(`agregar${producto.id}`);
+       
+    boton.addEventListener('click', ()=> {
+        Swal.fire({ //Sweet alert con mensaje de que se ha agregado el producto al carrito.
+            position: 'top-end',
+            icon: 'success',
+            text: `Se agrego el producto ${producto.nombre} al carrito de compras.`,
+            imageUrl: `../img/${producto.img}`,
+            imageWidth: 200,
+            imageAlt: `${producto.id}`,
+            showConfirmButton: true,
+            // timer: 1500
+          })
+        carritoIndex(producto.id);
+})
+}
+
+function renderizarProducto(producto) {
+    let div = document.createElement("div");
+    div.innerHTML = `<img src="../img/${producto.img}" alt="${producto.id}">
+                    <p> ${producto.nombre} </p>
+                    <b> $ ${producto.precio} </b>
+                    <button id="agregar${producto.id}">Agregar al carrito</button>`;
+    div.className = "product-block";
+    sectionProductsMen.append(div);
+}
+
 const renderizarCatalogo = async () => {
     const respuesta = await fetch("../json/stock.json");
     const data = await respuesta.json();
 
-    let listado = document.getElementById("listado");
     data.forEach (producto=> {
-        let div = document.createElement("div");
-        div.innerHTML = `<img src="../img/${producto.img}" alt="${producto.id}">
-                        <p> ${producto.nombre} </p>
-                        <b> $ ${producto.precio} </b>
-                        <button id="agregar${producto.id}">Agregar al carrito</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
-    
-        const boton = document.getElementById(`agregar${producto.id}`);
-       
-        boton.addEventListener('click', ()=> {
-            // alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                text: `Se agrego el producto ${producto.nombre} al carrito de compras.`,
-                imageUrl: `../img/${producto.img}`,
-                imageWidth: 200,
-                imageAlt: `${producto.id}`,
-                showConfirmButton: true,
-                // timer: 1500
-              })
-            carritoIndex(producto.id);
-    })
+        renderizarProducto(producto);
+        catalogoHombres.push(producto);
+        botonAgregar(producto);
 })
 }
 
@@ -83,7 +91,7 @@ const filtrosLeftBar = [
     {id: "Sale", nombre: "Sale"},
 ];
 
-//RENDERIZA EL CATALOGO EN sectionProductsMen
+//RENDERIZA LOS FILTROS EN LA LEFT BAR
 for (const filtro of filtrosLeftBar) {
     let li = document.createElement("li");
     if (filtro.nombre === "Sale") {
@@ -115,21 +123,8 @@ function ordenarMayorMenor() {
     sectionProductsMen.innerHTML = "";
 
     for (const producto of catalogoHombres) {
-        let div = document.createElement("div");
-        div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
-
-        const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        })
+        renderizarProducto(producto);
+        botonAgregar(producto);
     }
 }
 
@@ -153,21 +148,8 @@ function ordenarMenorMayor() {
     sectionProductsMen.innerHTML = "";
         
     for (const producto of catalogoHombres) {
-        let div = document.createElement("div");
-        div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
-
-        const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        })
+        renderizarProducto(producto);
+        botonAgregar(producto);
     }
 }
         
@@ -191,21 +173,8 @@ function ordenarAZ() {
     sectionProductsMen.innerHTML = "";
         
     for (const producto of catalogoHombres) {
-        let div = document.createElement("div");
-        div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
-
-        const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        })
+        renderizarProducto(producto);
+        botonAgregar(producto);
     }
 }
         
@@ -229,21 +198,9 @@ function resetearOrden() {
     sectionProductsMen.innerHTML = "";
         
     for (const producto of catalogoHombres) {
-        let div = document.createElement("div");
-        div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+        renderizarProducto(producto);
+        botonAgregar(producto);
 
-        const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        })
     }
 }
         
@@ -256,23 +213,9 @@ function filtroRecienLlegados() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.recienLlegado) {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
-/*         const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
     
 }
@@ -286,23 +229,9 @@ function filtroCategoriaRemeras() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.categoria === "Remeras") {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
-/*         const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
     
 }
@@ -316,23 +245,9 @@ function filtroCategoriaShorts() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.categoria === "Shorts") {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
-/*         const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
     
 }
@@ -346,23 +261,9 @@ function filtroCategoriaBuzos() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.categoria === "Buzos") {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
-/*         const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
     
 }
@@ -376,25 +277,10 @@ function filtroCategoriaAccesorios() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.categoria === "Accesorios") {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
-/*         const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
-    
 }
         
 let botonCategoriaAccesorios = document.getElementById("btnCategoriaAccesorios");
@@ -406,25 +292,10 @@ function filtroSale() {
     sectionProductsMen.innerHTML = "";
     for (const producto of catalogoHombres) {
         if (producto.sale) {
-            let div = document.createElement("div");
-            div.innerHTML = `<img src="../img/${producto.img}" alt="producto${producto.id}">
-                        <p class="productoNombre"> ${producto.nombre} </p>
-                        <p class="productoPrecio"> $ ${producto.precio} </p>
-                        <button id="agregar${producto.id}">Agregar</button>`;
-        div.className = "product-block";
-        sectionProductsMen.append(div);
+            renderizarProducto(producto);
+            botonAgregar(producto);
         };
-
- /*        const boton = document.getElementById(`agregar${producto.id}`);
-
-        boton.addEventListener('click', ()=> {
-            // carritoIndex(producto.id);
-            alert(`Se agrego el producto ${producto.nombre} al carrito de compras.`);
-            localStorage.setItem(`productoCarrito${producto.id}`,JSON.stringify(producto));
-        }) */
-
     }
-    
 }
         
 let botonSale = document.getElementById("btnSale");
